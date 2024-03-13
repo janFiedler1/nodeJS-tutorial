@@ -1,7 +1,9 @@
-const logger = require('./logger');
+const log = require('./logger');
 const path = require('path');
 const os = require('os');
 const fs = require('fs');
+const EventEmitter = require('events');
+const emitter = new EventEmitter();
 
 function sayHello(name) {
     console.log("hello" + name);
@@ -29,3 +31,15 @@ function fileSystem() {
         else console.log('Result', files);
     })
 }
+
+function registerListener() {
+    emitter.on("messageLogged", (arg) =>{
+        console.log("listener called", {id: 1});
+    });
+}
+
+log('message');
+
+
+
+ 
