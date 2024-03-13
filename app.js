@@ -1,9 +1,9 @@
-const log = require('./logger');
+const Logger = require('./logger');
 const path = require('path');
 const os = require('os');
 const fs = require('fs');
 const EventEmitter = require('events');
-const emitter = new EventEmitter();
+const http = require('http');
 
 function sayHello(name) {
     console.log("hello" + name);
@@ -32,14 +32,39 @@ function fileSystem() {
     })
 }
 
-function registerListener() {
-    emitter.on("messageLogged", (arg) =>{
-        console.log("listener called", {id: 1});
+function triggerLogger() {
+    const logger  = new Logger();
+    //logger.log('message');
+    logger.on("messageLogged", (arg) =>{
+        console.log("listener called", arg);
     });
+
+    logger.log('message');
 }
 
-log('message');
+function httpTesting() {
+    const server = http.createServer((req, res) => {
+        if (req.url === '/') {
+            res.write('Hello world');
+            res.end();
+        }
+        else if (req.url === '/api/courses') {
+            res.write(JSON.stringify([1,2,3]));
+            res.end();
+        }
+    });
+    server.listen(3000);
+
+    //the code block below is very low level, not commonly used
+    /*
+    server.on('connection', (socket) => {
+        console.log('New connection...');
+    });
+    */
+    console.log('Listening on port 3000...');
+}
 
 
+httpTesting();
 
  
